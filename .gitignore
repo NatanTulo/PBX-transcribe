@@ -1,0 +1,108 @@
+# PBX Transcribe - private data and local artifacts
+# Never commit recordings, transcripts, intermediate data, credentials, or models.
+
+# Raw PBX recordings and possible input directory names
+/rozmowy/
+/audio/
+/recordings/
+/input/
+/inputs/
+/data/
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.aac
+*.ogg
+*.opus
+*.wma
+*.gsm
+*.ulaw
+*.alaw
+*.pcm
+*.raw
+
+# Transcriptions, corrections, reports, and exports
+/output/
+/output_full/
+/transcripts/
+/transcriptions/
+/exports/
+rec_*.json
+*.transcript.json
+*.transcription.json
+*.srt
+*.vtt
+
+# Work queues, intermediate files, logs, and benchmark results
+/work/
+/work_full/
+/tmp/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.log
+*.stdout
+*.stderr
+benchmark*.json
+benchmark*.csv
+metrics*.json
+metrics*.csv
+/cost.csv
+
+# Local configuration, secrets, tokens, and keys
+/config.json
+/.env
+/.env.*
+!/.env.example
+credentials*.json
+secrets*.json
+*.token
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Downloaded models, caches, and third-party binaries
+/models/
+/tools/
+/.cache/
+/.huggingface/
+
+# Builds may contain bundled recordings/transcripts; never commit them
+/build/
+/dist/
+*.spec
+*.exe
+*.dll
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+
+# Python environments and caches
+/.venv/
+/venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+/.coverage
+/htmlcov/
+
+# Local agent/editor/OS metadata
+/.agents/
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Safe, versioned templates remain allowed
+!/config.example.json

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PBX Transcribe</title>
+  <script>
+    try {
+      if (localStorage.getItem('pbx-theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+    } catch (_) {}
+  </script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">LOCAL · PRIVATE</p>
+      <h1>PBX Transcribe</h1>
+    </div>
+    <div class="header-actions">
+      <div class="stats" id="stats">Ładowanie…</div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Ciemny motyw</button>
+    </div>
+  </header>
+  <main>
+    <aside id="recordings-sidebar">
+      <div class="recordings-heading">
+        <span id="recordings-label">Nagrania</span>
+        <span class="sort-note">A–Z</span>
+      </div>
+      <div id="recordings" class="recordings-list" role="listbox" aria-labelledby="recordings-label" tabindex="0"></div>
+    </aside>
+    <div id="sidebar-resizer" class="sidebar-resizer" role="separator" aria-label="Zmień szerokość listy nagrań" aria-controls="recordings-sidebar" aria-orientation="vertical" tabindex="0"></div>
+    <section class="workspace">
+      <div id="empty" class="empty">Wybierz nagranie z listy.</div>
+      <div id="detail" hidden>
+        <div class="toolbar">
+          <div>
+            <h2 id="recording-title"></h2>
+            <p id="metadata"></p>
+          </div>
+          <div class="view-controls">
+            <label class="toggle"><input id="show-raw" type="checkbox"> pokaż tekst źródłowy</label>
+            <span class="legend"><span class="legend-swatch"></span> poprawiony fragment</span>
+          </div>
+        </div>
+        <audio id="audio" controls preload="metadata"></audio>
+        <div id="segments" class="segments"></div>
+      </div>
+    </section>
+  </main>
+  <template id="segment-template">
+    <article class="segment">
+      <button class="timestamp" type="button"></button>
+      <div class="segment-meta">
+        <div class="speaker"></div>
+        <span class="change-count" hidden></span>
+      </div>
+      <div class="segment-content">
+        <div class="field-label">Tekst po korekcie</div>
+        <div class="text"></div>
+        <div class="raw" hidden>
+          <div class="field-label">Tekst źródłowy</div>
+          <div class="raw-text"></div>
+        </div>
+        <div class="changes" hidden><span class="changes-label">Zmiany:</span></div>
+      </div>
+    </article>
+  </template>
+  <script src="/app.js" defer></script>
+</body>
+</html>

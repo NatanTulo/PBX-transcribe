@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pbx-transcribe"
+version = "0.1.0"
+description = "Local, privacy-first PBX transcription MVP"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+stt = [
+  "faster-whisper>=1.1,<2",
+  "nvidia-cudnn-cu12>=9; platform_system == 'Windows'",
+]
+diarization = ["pyannote.audio>=4,<5", "torch>=2.5"]
+dev = ["pytest>=8,<9"]
+portable = ["pyinstaller>=6,<7"]
+
+[project.scripts]
+pbx-transcribe = "pbx_transcribe.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pbx_transcribe = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

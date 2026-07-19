@@ -1,0 +1,35 @@
+{
+  "input_dir": "rozmowy",
+  "output_dir": "output",
+  "work_dir": "work",
+  "stt": {
+    "model": "models/faster-whisper-large-v3",
+    "device": "cuda",
+    "compute_type": "int8_float16",
+    "language": "pl",
+    "batch_size": 8,
+    "beam_size": 5,
+    "vad_filter": true
+  },
+  "diarization": {
+    "enabled": false,
+    "model_path": "models/pyannote-speaker-diarization-community-1",
+    "device": "cuda",
+    "min_speakers": 2,
+    "max_speakers": 2
+  },
+  "correction": {
+    "enabled": false,
+    "base_url": "http://127.0.0.1:8080/v1",
+    "model": "bielik-11b-v3.0-instruct-q5_k_m",
+    "temperature": 0.1,
+    "max_segments_per_request": 8,
+    "max_chars_per_request": 6000,
+    "max_output_tokens": 4096,
+    "max_retries": 2,
+    "retry_backoff_seconds": 0.5,
+    "min_confidence": 0.7,
+    "max_change_ratio": 0.25,
+    "allow_remote": false
+  }
+}
