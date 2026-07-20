@@ -121,6 +121,63 @@ włączyć pyannote:
 Pipeline preferuje `exclusive_speaker_diarization`, jeżeli zwraca ją zainstalowana
 wersja pyannote, a potem przypisuje mówcę na poziomie segmentów i słów.
 
+### Porównanie Pyannote z NVIDIA Sortformer
+
+Pipeline obsługuje równoległe uruchomienie Pyannote i NVIDIA NeMo Streaming
+Sortformer. Wyniki obu systemów są zachowywane osobno w
+`speaker_diarization.systems`, a `speaker_interpretations` przy każdym segmencie
+pokazuje przypisanie obu modeli. Etykiety drugiego systemu są dopasowywane do
+systemu głównego według maksymalnego nakładania czasowego; oryginalna etykieta
+pozostaje w `original_speaker`.
+
+Wizualizator pokazuje zsynchronizowane ścieżki czasowe Pyannote i NVIDIA,
+przesuwający się kursor odtwarzania, etykiety przy segmentach oraz wyróżnienie
+rozbieżności. Kliknięcie kolorowego odcinka przewija audio do jego początku.
+
+Używany jest `nvidia/diar_streaming_sortformer_4spk-v2`, ponieważ model offline
+v1 ma licencję niekomercyjną. Wariant streamingowy v2 ma CC BY 4.0 i może być
+używany komercyjnie z zachowaniem atrybucji. NeMo jako kod jest dostępne na
+Apache 2.0. Szczegóły atrybucji znajdują się w `THIRD_PARTY_NOTICES.md`.
+
+NeMo należy uruchamiać na Linuksie (na komputerze deweloperskim może to być
+WSL2/Docker z dostępem do GPU). Instalacja i jednorazowe pobranie modelu:
+
+```bash
+python -m pip install -e ".[diarization,nvidia-diarization]"
+hf download nvidia/diar_streaming_sortformer_4spk-v2 \
+  diar_streaming_sortformer_4spk-v2.nemo \
+  --local-dir models/nvidia-diar-streaming-sortformer-4spk-v2
+```
+
+Po pobraniu można ponownie włączyć tryb offline. W konfiguracji ustaw
+`diarization.enabled: true`, `diarization.primary: "nvidia_sortformer"` i
+`diarization.nvidia.enabled: true`. Domyślny profil NVIDIA jest nastawiony na
+jakość przetwarzania po rozmowie, nie niskie opóźnienie online.
+
+Istniejące transkrypcje można wzbogacić bez ponownego uruchamiania Whispera i
+LLM-a:
+
+```bash
+pbx-transcribe compare-diarization --all --nvidia-only
+pbx-transcribe compare-diarization --all --nvidia-only --retry-incomplete
+```
+
+Jeśli jeden system ulegnie awarii, wynik drugiego zostaje zapisany, a GUI pokaże
+typ błędu bez ujawniania ścieżki ani treści rozmowy.
+
+Na Windows można zbudować odizolowane środowisko NeMo i przeliczyć wyłącznie
+NVIDIA, zachowując dotychczasowe wyniki Pyannote:
+
+```powershell
+docker build -f docker/nvidia-diarization.Dockerfile -t pbx-nvidia-diarization .
+docker run --rm --gpus all `
+  --mount "type=bind,source=$PWD,target=/workspace" `
+  pbx-nvidia-diarization --config config.json compare-diarization --all --nvidia-only
+```
+
+Kontener ma wyłączony dostęp Hugging Face podczas inferencji i korzysta z
+lokalnego pliku `.nemo`. Nie uruchamia Whispera, Bielika ani serwera LLM.
+
 ## Kolejka i polecenia
 
 ```text
@@ -130,6 +187,7 @@ pbx-transcribe retry-failed          ponowienie zadań zakończonych błędem
 pbx-transcribe retry-interrupted     odzyskanie zadania po przerwanym workerze
 pbx-transcribe worker --limit N      przetworzenie N zadań; 0 = do opróżnienia
 pbx-transcribe process REC_ID        pojedyncze nagranie po anonimowym ID
+pbx-transcribe compare-diarization --all --nvidia-only  NVIDIA bez ponownego STT/LLM/Pyannote
 pbx-transcribe serve                 lokalny wizualizator
 pbx-transcribe metrics REF HYP       tylko zagregowane WER/CER, bez wypisywania tekstu
 ```

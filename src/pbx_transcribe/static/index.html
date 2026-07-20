@@ -45,6 +45,23 @@
           </div>
         </div>
         <audio id="audio" controls preload="metadata"></audio>
+        <section id="diarization-comparison" class="diarization-comparison" hidden aria-labelledby="diarization-title">
+          <div class="comparison-heading">
+            <div>
+              <h3 id="diarization-title">Porównanie diaryzacji</h3>
+              <p>Każdy wiersz pokazuje niezależną interpretację tego, kto mówił w danym momencie.</p>
+            </div>
+            <div id="speaker-legend" class="speaker-legend"></div>
+          </div>
+          <div id="diarization-timeline" class="diarization-timeline"></div>
+        </section>
+        <section id="transcript-division" class="transcript-division" hidden aria-labelledby="division-title">
+          <div>
+            <h3 id="division-title">Podział bloków tekstowych</h3>
+            <p>Tekst jest dzielony niezależnie według odcinków mowy wskazanych przez wybrany system.</p>
+          </div>
+          <div id="division-tabs" class="division-tabs" role="tablist" aria-label="System podziału transkrypcji"></div>
+        </section>
         <div id="segments" class="segments"></div>
       </div>
     </section>
@@ -54,6 +71,7 @@
       <button class="timestamp" type="button"></button>
       <div class="segment-meta">
         <div class="speaker"></div>
+        <div class="speaker-interpretations"></div>
         <span class="change-count" hidden></span>
       </div>
       <div class="segment-content">

@@ -13,10 +13,23 @@
   },
   "diarization": {
     "enabled": false,
+    "primary": "nvidia_sortformer",
     "model_path": "models/pyannote-speaker-diarization-community-1",
     "device": "cuda",
     "min_speakers": 2,
-    "max_speakers": 2
+    "max_speakers": 2,
+    "nvidia": {
+      "enabled": true,
+      "model_path": "models/nvidia-diar-streaming-sortformer-4spk-v2/diar_streaming_sortformer_4spk-v2.nemo",
+      "device": "cuda",
+      "batch_size": 1,
+      "allow_remote": false,
+      "chunk_len": 340,
+      "chunk_right_context": 40,
+      "fifo_len": 40,
+      "spkcache_update_period": 300,
+      "spkcache_len": 188
+    }
   },
   "correction": {
     "enabled": false,

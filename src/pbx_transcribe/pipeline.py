@@ -34,12 +34,15 @@ class Pipeline:
         stt_ms = round((time.perf_counter() - stage_started) * 1000)
 
         stage_started = time.perf_counter()
-        self.diarizer.assign(resolved, segments)
+        speaker_diarization = self.diarizer.assign(resolved, segments) or {
+            "primary_system": None,
+            "systems": [],
+        }
         diarization_ms = round((time.perf_counter() - stage_started) * 1000)
 
         result_id = recording_id(resolved, self.input_root)
         transcript = Transcript(
-            schema_version="1.0",
+            schema_version="1.1",
             recording_id=result_id,
             language=language,
             audio=audio,
@@ -58,6 +61,7 @@ class Pipeline:
                 "elapsed_ms": round((time.perf_counter() - started) * 1000),
                 "real_time_factor": None,
             },
+            speaker_diarization=speaker_diarization,
         )
         # Durable checkpoint: even a local LLM failure or process interruption
         # cannot discard the expensive STT and diarization result.

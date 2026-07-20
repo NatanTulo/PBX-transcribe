@@ -44,6 +44,7 @@ class Segment:
     corrected_text: str
     words: list[Word] = field(default_factory=list)
     corrections: list[Correction] = field(default_factory=list)
+    speaker_interpretations: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -54,7 +55,7 @@ class Transcript:
     audio: AudioMetadata
     segments: list[Segment]
     processing: dict[str, Any]
+    speaker_diarization: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
-

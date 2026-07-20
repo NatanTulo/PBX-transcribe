@@ -15,6 +15,10 @@ stt = [
   "nvidia-cudnn-cu12>=9; platform_system == 'Windows'",
 ]
 diarization = ["pyannote.audio>=4,<5", "torch>=2.5"]
+nvidia-diarization = [
+  "nemo_toolkit[asr]>=2.5,<3; platform_system == 'Linux'",
+  "torch>=2.5; platform_system == 'Linux'",
+]
 dev = ["pytest>=8,<9"]
 portable = ["pyinstaller>=6,<7"]
 

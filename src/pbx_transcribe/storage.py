@@ -16,10 +16,15 @@ class TranscriptStore:
         return self.root / f"{recording_id}.json"
 
     def save(self, transcript: Transcript) -> Path:
-        target = self.path_for(transcript.recording_id)
+        return self.save_dict(transcript.recording_id, transcript.to_dict())
+
+    def save_dict(self, recording_id: str, value: dict) -> Path:
+        if not recording_id.startswith("rec_") or not recording_id.replace("_", "").isalnum():
+            raise ValueError("invalid recording id")
+        target = self.path_for(recording_id)
         temporary = target.with_suffix(".json.tmp")
         temporary.write_text(
-            json.dumps(transcript.to_dict(), ensure_ascii=False, indent=2),
+            json.dumps(value, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
         os.replace(temporary, target)
@@ -32,4 +37,3 @@ class TranscriptStore:
         if not recording_id.startswith("rec_") or not recording_id.replace("_", "").isalnum():
             raise ValueError("invalid recording id")
         return json.loads(self.path_for(recording_id).read_text(encoding="utf-8"))
-
