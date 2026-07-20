@@ -50,7 +50,7 @@ function renderCorrectedText(node, segment) {
     .filter(item => Number.isInteger(item.start_char) && Number.isInteger(item.end_char))
     .sort((a, b) => a.start_char - b.start_char);
   if (!corrections.length) {
-    setText(node, segment.corrected_text);
+    node.append(document.createTextNode(String(segment.corrected_text ?? '')));
     return;
   }
   const source = String(segment.raw_text ?? '');
@@ -332,7 +332,7 @@ function buildDivisionBlocks(transcript, systemId) {
   const blocks = [];
   pieces.forEach(piece => {
     const previous = blocks.at(-1);
-    if (previous && previous.turnIndex === piece.turnIndex) {
+    if (previous && previous.speaker === piece.speaker) {
       previous.end_ms = Math.max(previous.end_ms, piece.end_ms);
       previous.pieces.push(piece);
       previous.correction_count += piece.corrections.length;
